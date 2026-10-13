@@ -1,0 +1,22 @@
+---
+- name: This is your lausanne2.yml playbook
+  hosts: "{{ oreol_target }}"
+  become: false
+  gather_facts: true
+
+  vars_files:
+    - lausanne2_vars.yml
+
+  tasks:
+    - name: Show server information
+      ansible.builtin.debug:
+        msg:
+          - "Ansible is working!"
+          - "Server: {{ ansible_facts['hostname'] }}"
+          - "Operating system: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
+          - "Connection: {{ ansible_connection | default('ssh') }}"
+
+    - name: Show optional settings
+      ansible.builtin.debug:
+        msg: "IP: {{ ip }}; value: {{ value }}"
+      when: src | default(false) | bool
