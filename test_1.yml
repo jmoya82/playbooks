@@ -1,0 +1,24 @@
+---
+- name: This is your test_1.yml playbook
+  hosts: "{{ oreol_target }}"
+  become: false
+  gather_facts: true
+
+  vars_files:
+    - test_1_vars.yml
+
+  tasks:
+    - name: Show server information
+      ansible.builtin.debug:
+        msg:
+          - "Ansible is working!"
+          - "Server: {{ ansible_facts['hostname'] }}"
+          - "Operating system: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}"
+          - "Connection: {{ ansible_connection | default('ssh') }}"
+
+    # For known names, use {{ a }} or {{ b }} directly in your tasks.
+    # lookup() lets this example show any names supplied through --vars.
+    - name: Parsing variables passed with --vars
+      ansible.builtin.debug:
+        msg: "{{ item }} = {{ lookup('ansible.builtin.vars', item) }}"
+      loop: "{{ odev_extra_var_names | default([]) }}"
